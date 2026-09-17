@@ -1,0 +1,19 @@
+{
+  "n": 83,
+  "unique_recorders": 59,
+  "per_role_acc": {
+    "PITCH": 1.0,
+    "SYLL": 1.0,
+    "DUR": 1.0,
+    "ID": 1.0,
+    "SNR": 1.0
+  },
+  "joint_acc": 1.0,
+  "codebook_sizes": {
+    "PITCH": 16,
+    "SYLL": 16,
+    "DUR": 16,
+    "ID": 59,
+    "SNR": 16
+  }
+}
