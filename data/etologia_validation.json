@@ -1,0 +1,25 @@
+{
+  "n_clips": 83,
+  "conducta_counts": {
+    "cortejo": 51,
+    "contacto": 11,
+    "otro": 7,
+    "mecanica": 6,
+    "demanda": 5,
+    "alerta": 3
+  },
+  "same_type_sim": {
+    "mean": 0.16074394925554988,
+    "std": 0.17348076040691657
+  },
+  "diff_type_sim": {
+    "mean": 0.16163581200150084,
+    "std": 0.15974352453602117
+  },
+  "bootstrap_ci95": [
+    -0.031833266900454925,
+    0.03103096908388075
+  ],
+  "knn_acc_1nn": 0.4939759036144578,
+  "centroid_acc": 0.6867469879518072
+}
