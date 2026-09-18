@@ -1,0 +1,23 @@
+[
+  {
+    "file": "200010.mp3",
+    "n_windows": 255,
+    "pitch_recovered": 12,
+    "pitch_total": 20,
+    "pitch_acc": 0.6
+  },
+  {
+    "file": "1151256.mp3",
+    "n_windows": 237,
+    "pitch_recovered": 16,
+    "pitch_total": 20,
+    "pitch_acc": 0.8
+  },
+  {
+    "file": "1005657.mp3",
+    "n_windows": 160,
+    "pitch_recovered": 13,
+    "pitch_total": 20,
+    "pitch_acc": 0.65
+  }
+]
