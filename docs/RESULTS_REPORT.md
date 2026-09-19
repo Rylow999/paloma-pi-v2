@@ -108,3 +108,26 @@ El dataset tiene **2 clusters naturales** (sin etiquetas):
 Separación bootstrap = 1.89 (fuerza media-alta). Esto sugiere que los
 recordistas captaron dos familias de arrullo (posiblemente contextos
 distintos: cortejo vs. contacto) — la validación etológica dirá.
+
+## Hallazgo de la boca mínima (16-17 sep, honesto)
+
+Implementamos la boca mínima (resonator + reglas de decisión calibradas con
+percentiles reales del dataset). Resultado: **falla honestamente** — accuracy
+0.15 vs azar 0.70 contra las clases biológicas puras (cortejo/contacto/alerta/
+demanda/mecánica, 20 clips con etiqueta pura).
+
+**La lección del paper aplicándose a sí misma**: el problema no son las reglas,
+son los ROLES del encoder. El pitch medio de un clip entero de 500s no distingue
+un song de un call — lo que distingue es la estructura temporal, que el
+experimento de secuencias ya demostró que el resonator puede leer (accuracy
+60-80%).
+
+**Dirección correcta**: la boca necesita los features por VENTANA (no los
+globales). El encoder debe codificar la secuencia, no el promedio. El
+experimento temporal ya demostró que la información está; falta cablear la
+boca a los features de ventana.
+
+**La boca con LLM (extensión)**: para verbalizar la estructura por ventana
+("arrullo con pitch creciente en la ventana 3") hace falta un transductor
+verbalizador. Ese es el patrón de Pandora: resonator (oído) → LLM (boca).
+Queda como extensión, no como base.
