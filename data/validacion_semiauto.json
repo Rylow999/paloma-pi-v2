@@ -1,0 +1,18 @@
+{
+  "n_clips": 80,
+  "classes": [
+    "cortejo",
+    "contacto",
+    "mecanica",
+    "otro",
+    "demanda"
+  ],
+  "acc_1nn_real": 0.5375,
+  "silhouette_real": 0.02304764503493574,
+  "null_acc_mean": 0.4339,
+  "null_acc_std": 0.05344543946867684,
+  "null_sil_mean": -0.014555125986847486,
+  "null_sil_std": 0.041917931057001034,
+  "p_acc": 0.0499001996007984,
+  "p_sil": 0.18163672654690619
+}
