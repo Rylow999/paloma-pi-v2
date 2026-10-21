@@ -2,60 +2,60 @@
 
 **Decoding animal vocalizations via observer-relative VSA — pure resonator HRR on real bioacoustic data.**
 
-Autor: Luciano Benjamín Nieto · Asistencia técnica: Nexus (agente)
-Licencia: MIT
+Author: Luciano Benjamín Nieto · Technical assistance: Nexus (agent)
+License: MIT
 
 ---
 
-## Qué es
+## What it is
 
-Un pipeline que demuestra que la señal vocal de *Columba livia* (y especies
-cercanas) **contiene estructura composicional recuperable** — sin
-entrenamiento supervisado, sin LLM, sin etiquetado manual.
+A pipeline showing that the vocal signal of *Columba livia* (and related
+species) **contains recoverable compositional structure** — without
+supervised training, without an LLM, without manual labeling.
 
-La base teórica es el hallazgo del repo hermano
+The theoretical basis is the finding of the sibling repository
 [`Rylow999/fhrr-rho-collapse`](https://github.com/Rylow999/fhrr-rho-collapse):
 
-> El "colapso" de un decoder no es propiedad de la señal sino del observador.
-> Un resonator puro (sin corrección de Gram) recupera la estructura completa
-> en todo el grid de superposición, incluida la singularidad ρ=1.
+> A decoder's "collapse" is not a property of the signal but of the observer.
+> A pure resonator (no Gram correction) recovers the full structure across
+> the entire superposition grid, including the ρ=1 singularity.
 
-## Resultados principales
+## Key results
 
-| Resultado | Valor |
+| Result | Value |
 |---|---|
-| Roles decodificados por el resonator puro | **6/6 con accuracy 1.000** (83 clips reales) |
-| Estructura conductual (1-NN vs null model, 500 permutaciones) | **p = 0.002** (acc 0.878 vs azar 0.686) |
-| Trayectoria temporal del pitch (ventanas de 5s, rol TIME) | **60–80% accuracy** en arrullos de hasta 8.5 min |
-| Identificación de grabador (59 distintos) | **accuracy 1.000** |
-| Clusters naturales (k-means, sin etiquetas) | 2 familias: 171Hz/30s vs 301Hz/108s |
-| Robustez al ruido (σ hasta 0.2) | sin degradación |
+| Roles decoded by the pure resonator | **6/6 with accuracy 1.000** (83 real clips) |
+| Behavioral structure (1-NN vs null model, 500 permutations) | **p = 0.002** (acc 0.878 vs chance 0.686) |
+| Temporal pitch trajectory (5s windows, TIME role) | **60–80% accuracy** on warbles up to 8.5 min |
+| Recorder identification (59 distinct) | **accuracy 1.000** |
+| Natural clusters (k-means, no labels) | 2 families: 171Hz/30s vs 301Hz/108s |
+| Noise robustness (σ up to 0.2) | no degradation |
 
-## Estructura
+## Repository structure
 
 ```
 paloma-pi-v2/
 ├── src/
-│   ├── extractor_audio.py     # YIN pitch + bandpass 100-450Hz + VAD
-│   ├── hrr_encoder.py         # features → bundle HRR (6 roles)
-│   ├── pure_resonator.py      # decoder sin Gram (resonator puro)
-│   ├── normalizer.py          # port del Módulo B original (omega esférico)
-│   ├── boca_minima.py         # resonator + reglas → palabra (resultado honesto)
-│   ├── eval_run.py            # evaluación estándar (10 clips)
-│   ├── eval_run_large.py      # evaluación dataset grande (83 clips)
-│   ├── exp_temporal_sequence.py  # ventanas deslizantes + rol TIME
-│   ├── etologia_sin_boris.py  # validación con metadata xeno-canto
-│   └── stress_test.py         # robustez al ruido
-├── data/                      # features CSV + resultados JSON (audio en disco local)
-├── figures/                   # figuras del análisis
+│   ├── extractor_audio.py     # YIN pitch + 100-450Hz bandpass + VAD
+│   ├── hrr_encoder.py         # features → HRR bundle (6 roles)
+│   ├── pure_resonator.py      # Gram-free decoder (pure resonator)
+│   ├── normalizer.py          # port of the original Module B (spherical omega)
+│   ├── boca_minima.py         # resonator + rules → word (honest negative result)
+│   ├── eval_run.py            # standard evaluation (10 clips)
+│   ├── eval_run_large.py      # large-dataset evaluation (83 clips)
+│   ├── exp_temporal_sequence.py  # sliding windows + TIME role
+│   ├── etologia_sin_boris.py  # validation with xeno-canto metadata
+│   └── stress_test.py         # noise robustness
+├── data/                      # feature CSVs + result JSONs (audio kept off-repo)
+├── figures/                   # analysis figures
 ├── docs/
-│   ├── DESIGN.md              # diseño v2 vs v1
-│   ├── RESULTS_REPORT.md      # informe completo con hallazgos
-│   └── BORIS_ETHOGRAM.md      # ethogram para validación manual futura
-└── papers/                    # notas de papers bioacústicos de referencia
+│   ├── DESIGN.md              # v2 vs v1 design
+│   ├── RESULTS_REPORT.md      # full report with findings
+│   └── BORIS_ETHOGRAM.md      # ethogram for future manual validation
+└── papers/                    # reference bioacoustics paper notes
 ```
 
-## Cómo correr
+## How to run
 
 ```bash
 git clone https://github.com/Rylow999/paloma-pi-v2.git
@@ -63,57 +63,59 @@ cd paloma-pi-v2
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
-# 1. Descargar grabaciones (requiere API key de xeno-canto, gratis)
-export XENO_KEY="tu_api_key"
+# 1. Download recordings (requires a free xeno-canto API key)
+export XENO_KEY="your_api_key"
 python3 scripts/download_large.py
 
-# 2. Extraer features
+# 2. Extract features
 python3 -c "from src.extractor_audio import batch_extract; batch_extract('data/audio_xc_large', 'data/features_large.csv')"
 
-# 3. Evaluar el resonator
+# 3. Evaluate the resonator
 python3 src/eval_run_large.py
 
-# 4. Validación etológica semi-automática (sin etiquetado manual)
+# 4. Semi-automatic ethological validation (no manual labeling)
 python3 src/etologia_sin_boris.py
 
-# 5. Secuencias temporales
+# 5. Temporal sequences
 python3 src/exp_temporal_sequence.py
 ```
 
-## El principio (observer-relativity aplicado)
+## The principle (observer-relativity applied)
 
-El análisis clásico de bioacústica (espectrograma + PCA + clasificador)
-reporta la señal como "parcialmente estructurada". El resonator puro la lee
-completa. La diferencia no está en el ave — está en el observador:
+Classical bioacoustic analysis (spectrogram + PCA + classifier) reports the
+signal as "partially structured". The pure resonator reads it in full. The
+difference is not in the bird — it is in the observer:
 
-- La señal contiene pitch, ritmo, identidad y contexto (verificado).
-- Los métodos lineales pierden la superposición (la ley ρ del paper hermano).
-- El resonator la recupera sin corrección (sin Gram).
+- The signal contains pitch, rhythm, identity and context (verified).
+- Linear methods lose superposition (the ρ law of the sibling paper).
+- The resonator recovers it without correction (Gram-free).
 
-**Implicación**: antes de concluir "la señal animal no es composicional",
-hay que probar al menos dos clases de decoders. El resultado negativo puede
-ser un artefacto del instrumento.
+**Implication**: before concluding "animal signals are not compositional",
+test at least two classes of decoders. A negative result may be an artifact
+of the instrument.
 
-## La boca mínima (resultado honesto)
+## The minimal mouth (honest result)
 
-Implementamos la boca (resonator + reglas → palabra). **Falló**: accuracy
-0.15 vs azar 0.70. La lección del paper aplicándose a sí misma: los roles
-globales del encoder no contienen la información discriminante — la
-estructura temporal sí (ya demostrada). Dirección correcta: codificar la
-secuencia, no el promedio. Documentado en `docs/RESULTS_REPORT.md`.
+We implemented the mouth (resonator + rules → word). **It failed**: accuracy
+0.15 vs chance 0.70. The paper's lesson applying to itself: the encoder's
+global roles do not carry the discriminant information — the temporal
+structure does (already demonstrated). Right direction: encode the sequence,
+not the average. Documented in `docs/RESULTS_REPORT.md`.
 
-## Datos
+## Data
 
-Las grabaciones de xeno-canto NO se versionan en el repo (límite de GitHub
-100MB). El script `scripts/download_large.py` las regenera con la API key.
-Los features y resultados SÍ están versionados.
+xeno-canto recordings are NOT versioned in this repository (GitHub 100MB
+limit). The script `scripts/download_large.py` regenerates them with the API
+key. Features and results ARE versioned.
 
-## Papers de referencia
+## Reference papers
 
 - Plate 1995 — Holographic Reduced Representations
 - Frady et al. 2020 — Resonator networks
-- Abs & Jeismann 1988 — Courtship songs of Columba livia (individualidad)
-- Partan et al. 2005 — Multisensory playbacks (multimodalidad)
+- Abs & Jeismann 1988 — Courtship songs of Columba livia (individuality)
+- Partan et al. 2005 — Multisensory playbacks (multimodality)
 - Suzuki et al. 2016 — Compositional syntax in Parus minor
 
-*Per aspera.*
+## Motto
+
+*Per Aspera, Ad Astra.*
